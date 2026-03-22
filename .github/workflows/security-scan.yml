@@ -23,7 +23,7 @@ jobs:
                   hadolint /workdir/microservices/user/Dockerfile \
                            /workdir/microservices/payment/Dockerfile \
                            /workdir/microservices/frontend/Dockerfile || true
-              continue-on-error: true  # optional: keeps job going even if warnings
+       #       continue-on-error: true  # optional: keeps job going even if warnings
                     
 
     #  - name: Dockerfile lint (hadolint)
