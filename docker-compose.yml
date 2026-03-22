@@ -14,3 +14,10 @@ services:
     build: ./microservices/frontend
     ports:
       - "8080:80"
+
+  dashboard:
+    build: ./microservices/dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app  # share code for easy updates
