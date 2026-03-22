@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  user:
+    build: ./microservices/user
+    ports:
+      - "8001:8000"
+
+  payment:
+    build: ./microservices/payment
+    ports:
+      - "8002:8000"
+
+  frontend:
+    build: ./microservices/frontend
+    ports:
+      - "8080:80"
