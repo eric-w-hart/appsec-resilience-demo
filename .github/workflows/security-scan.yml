@@ -1,1 +1,22 @@
+name: AppSec Demo - Automation Gate
 
+on: [push, pull_request]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build images
+        run: docker compose build
+
+      - name: Simple vuln check (pip-audit on user/payment services)
+        run: |
+          docker run --rm python:3.11-slim pip install pip-audit
+          docker run --rm -v $(pwd)/microservices/user:/app python:3.11-slim bash -c "cd /app && pip install -r requirements.txt || true && pip-audit"
+          docker run --rm -v $(pwd)/microservices/payment:/app python:3.11-slim bash -c "cd /app && pip install -r requirements.txt || true && pip-audit"
+
+      - name: Config lint (hadolint on Dockerfiles)
+        run: |
+          docker run --rm -v $(pwd):/app hadolint/hadolint hadolint /app/microservices/*/Dockerfile
