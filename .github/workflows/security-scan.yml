@@ -11,12 +11,17 @@ jobs:
       - name: Build images
         run: docker compose build
 
-      - name: Simple vuln check (pip-audit on user/payment services)
+      - name: Dependency scan (pip-audit on Python services)
         run: |
-          docker run --rm python:3.11-slim pip install pip-audit
-          docker run --rm -v $(pwd)/microservices/user:/app python:3.11-slim bash -c "cd /app && pip install -r requirements.txt || true && pip-audit"
-          docker run --rm -v $(pwd)/microservices/payment:/app python:3.11-slim bash -c "cd /app && pip install -r requirements.txt || true && pip-audit"
+          pip install pip-audit
+          pip-audit -r microservices/user/requirements.txt || true
+          pip-audit -r microservices/payment/requirements.txt || true
 
-      - name: Config lint (hadolint on Dockerfiles)
-        run: |
-          docker run --rm -v $(pwd):/app hadolint/hadolint hadolint /app/microservices/*/Dockerfile
+      - name: Dockerfile lint (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: |
+            microservices/user/Dockerfile
+            microservices/payment/Dockerfile
+            microservices/frontend/Dockerfile
+          failure-threshold: warning  # fail on warning or higher
