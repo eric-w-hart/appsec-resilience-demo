@@ -24,4 +24,4 @@ jobs:
             microservices/user/Dockerfile
             microservices/payment/Dockerfile
             microservices/frontend/Dockerfile
-          failure-threshold: warning  # fail on warning or higher
+          failure-threshold: warning
